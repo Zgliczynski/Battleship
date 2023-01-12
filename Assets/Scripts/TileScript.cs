@@ -15,6 +15,8 @@ public class TileScript : MonoBehaviour
     private void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        hitColor[0] = gameObject.GetComponent<MeshRenderer>().material.color;
+        hitColor[1] = gameObject.GetComponent<MeshRenderer>().material.color;
     }
 
     private void Update()
@@ -31,5 +33,28 @@ public class TileScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Missile"))
+        {
+            missileHit = true;
+        }
+        else if (collision.gameObject.CompareTag("EnemyMissile"))
+        {
+            hitColor[0] = new Color32(38, 57, 76, 255);
+            GetComponent<Renderer>().material.color = hitColor[0];
+        }
+    }
+
+    public void SetTileColor(int index, Color32 color)
+    {
+        hitColor[index] = color;
+    }
+
+    public void SwitchColors(int colorIndex)
+    {
+        GetComponent<Renderer>().material.color = hitColor[colorIndex];
     }
 }

@@ -4969,6 +4969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cafc604c743ed9242bf39448ab285938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMissilePrefab: {fileID: 0}
 --- !u!4 &792158707
 Transform:
   m_ObjectHideFlags: 0
@@ -11270,8 +11271,16 @@ MonoBehaviour:
   - {fileID: 72243400}
   - {fileID: 586625366}
   - {fileID: 1532787913}
+  enemyScript: {fileID: 792158706}
   nextBtn: {fileID: 39240912}
   rotateBtn: {fileID: 687021693}
+  topText: {fileID: 62427243}
+  playerText: {fileID: 0}
+  enemyText: {fileID: 0}
+  missilePrefabs: {fileID: 2843977946754950709, guid: be973b43ce67049418137b7459b375cf, type: 3}
+  enemyMissilePrefabs: {fileID: 4808551108393747830, guid: 7edca8dfe8139e84e9d71d0fbe4e1219, type: 3}
+  woodDeck: {fileID: 595632506}
+  firePrefabs: {fileID: 0}
 --- !u!4 &1813253693
 Transform:
   m_ObjectHideFlags: 0

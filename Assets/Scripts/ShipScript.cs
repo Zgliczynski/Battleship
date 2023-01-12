@@ -6,10 +6,15 @@ using UnityEngine;
 public class ShipScript : MonoBehaviour
 {
     List<GameObject> touchTiles = new List<GameObject>();
+    
     public float xOffset = 0;
     public float zOffset = 0;
     private float nextZRotation = 90f;
+    
     private GameObject clickedTile;
+
+    int hitCount = 0;
+    int shipSize;
 
     public void ClearTileList()
     {
@@ -40,5 +45,16 @@ public class ShipScript : MonoBehaviour
     public void SetClickedTile(GameObject tile)
     {
         clickedTile = tile;
+    }
+
+    public bool OnGameBoard()
+    {
+        return touchTiles.Count == shipSize;
+    }
+
+    public bool HitCheckSank()
+    {
+        hitCount++;
+        return shipSize <= hitCount;
     }
 }
