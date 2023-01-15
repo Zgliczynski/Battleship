@@ -6,7 +6,8 @@ using UnityEngine;
 public class ShipScript : MonoBehaviour
 {
     List<GameObject> touchTiles = new List<GameObject>();
-    
+    List<Color> allColors = new List<Color>();
+
     public float xOffset = 0;
     public float zOffset = 0;
     private float nextZRotation = 90f;
@@ -14,7 +15,24 @@ public class ShipScript : MonoBehaviour
     private GameObject clickedTile;
 
     int hitCount = 0;
-    int shipSize;
+    public int shipSize;
+
+    private Material[] allMaterials;
+
+    private void Start()
+    {
+        allMaterials = GetComponent<Renderer>().materials;
+        for (int i = 0; i < allMaterials.Length; i++)
+            allColors.Add(allMaterials[i].color);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Tile"))
+        {
+            touchTiles.Add(collision.gameObject);
+        }
+    }
 
     public void ClearTileList()
     {
@@ -28,6 +46,7 @@ public class ShipScript : MonoBehaviour
 
     public void RotateShips()
     {
+        if (clickedTile == null) return;
         touchTiles.Clear();
         transform.localEulerAngles += new Vector3(0, 0, nextZRotation);
         nextZRotation *= -1;
@@ -39,6 +58,7 @@ public class ShipScript : MonoBehaviour
 
     public void SetPosition(Vector3 newVec)
     {
+        ClearTileList();
         transform.localPosition = new Vector3(newVec.x + xOffset, 2, newVec.z + zOffset);
     }
 
@@ -56,5 +76,23 @@ public class ShipScript : MonoBehaviour
     {
         hitCount++;
         return shipSize <= hitCount;
+    }
+
+    public void FlashColor(Color tempColor)
+    {
+        foreach(Material mat in allMaterials)
+        {
+            mat.color = tempColor;
+        }
+        Invoke("ResetColor", 0.5f);
+    }
+
+    private void ResetColor()
+    {
+        int i = 0;
+        foreach (Material mat in allMaterials)
+        {
+            mat.color = allColors[i++];
+        }
     }
 }

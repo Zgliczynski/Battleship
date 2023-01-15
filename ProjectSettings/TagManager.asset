@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Missile
   - EnemyMissile
+  - Tile
+  - Ship
   layers:
   - Default
   - TransparentFX

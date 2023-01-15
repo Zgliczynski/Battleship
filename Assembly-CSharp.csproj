@@ -55,10 +55,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
-    <Compile Include="Assets\Scripts\TileScript.cs" />
-    <Compile Include="Assets\Scripts\EnemyScript.cs" />
-    <Compile Include="Assets\Scripts\MissileScript.cs" />
     <Compile Include="Assets\Scripts\EnemyMissileScript.cs" />
+    <Compile Include="Assets\Scripts\TileScript.cs" />
+    <Compile Include="Assets\Scripts\MissileScript.cs" />
+    <Compile Include="Assets\Scripts\EnemyScript.cs" />
+    <Compile Include="Assets\Scripts\FireScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
