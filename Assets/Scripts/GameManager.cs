@@ -12,18 +12,22 @@ public class GameManager : MonoBehaviour
     private bool setupComplete = false;
     private bool playerTurn = true;
 
-    public GameObject[] ships;
-    private int shipsIndex = 0;
     private ShipScript shipScript;
-
-    private List<int[]> enemyShips;
-    private List<GameObject> playerFires;
-    private List<GameObject> enemyFires;
-    private List<TileScript> allTileScript;
-
+    
+    private int shipsIndex = 0;
     private int enemyShipsCount = 5;
     private int playerShipsCount = 5;
 
+    [Header("List")]
+    private List<int[]> enemyShips;
+    private List<GameObject> playerFires = new List<GameObject>();
+    private List<GameObject> enemyFires = new List<GameObject>();
+    public List<TileScript> allTileScript;
+
+
+    [Header("Ships")]
+    public GameObject[] ships;
+    
     [Header("Enemy")]
     public EnemyScript enemyScript;
 
@@ -46,6 +50,7 @@ public class GameManager : MonoBehaviour
         shipScript = ships[shipsIndex].GetComponent<ShipScript>();
         nextBtn.onClick.AddListener(() => NextShipClicked());
         rotateBtn.onClick.AddListener(() => RotateClicked());
+        replayBtn.onClick.AddListener(() => ReplayCLicked());
         enemyShips = enemyScript.PlaceEnemyShips();
     }
 
@@ -176,20 +181,20 @@ public class GameManager : MonoBehaviour
         enemyScript.NPCTurn();
         ColorAllTiles(0);
         if (playerShipsCount < 1)
-            GameOver("YOU WIN!!!");
+            GameOver("YOU LOSE!!!");
     }
 
-    private void EndEnemyTurn()
+    public void EndEnemyTurn()
     {
         for (int i = 0; i < ships.Length; i++) ships[i].SetActive(false);
         foreach (GameObject fire in playerFires) fire.SetActive(false);
         foreach (GameObject fire in enemyFires) fire.SetActive(true);
         playerText.text = playerShipsCount.ToString();
         topText.text = "Select a tile";
-        enemyScript.NPCTurn();
+        playerTurn = true;
         ColorAllTiles(1);
         if (enemyShipsCount < 1)
-            GameOver("THE ENEMY WON!!!");
+            GameOver("YOU WIN!!!");
     }
 
     private void ColorAllTiles(int colorIndex)
@@ -202,8 +207,9 @@ public class GameManager : MonoBehaviour
 
     void GameOver(string winner)
     {
-        topText.text = "Game Over" + winner;
+        topText.text = "Game Over : " + winner;
         replayBtn.gameObject.SetActive(true);
+        playerTurn = false;
     }
 
     void ReplayCLicked()

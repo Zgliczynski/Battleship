@@ -10,6 +10,7 @@ public class EnemyScript : MonoBehaviour
     private int guess;
 
     public GameObject enemyMissilePrefab;
+    public GameManager gameManager;
 
     List<int> potentialHits;
     List<int> currentHit;
@@ -112,9 +113,11 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            int nextIndex = Random.Range(0, 100);
-            while(guessGrid[nextIndex] != 'o')
+            int nextIndex = GuessQuality(Random.Range(0, 100));
+            nextIndex = GuessQuality(nextIndex);
+            while (guessGrid[nextIndex] != 'o')
                     nextIndex = Random.Range(0, 100);
+            nextIndex = GuessAgainCheck(nextIndex);
             guess = nextIndex;
         }
         GameObject tile = GameObject.Find("Tile (" + (guess + 1) + ")");
@@ -126,9 +129,36 @@ public class EnemyScript : MonoBehaviour
         missile.GetComponent<EnemyMissileScript>().targetTileLocaction = tile.transform.position;
     }
 
+    private int GuessAgainCheck(int nextIndex)
+    {
+        int newGuess = nextIndex;
+        bool edgeCase = nextIndex < 10 || nextIndex > 89 || nextIndex % 10 == 0 || nextIndex % 10 == 9;
+        bool nearGuess = false;
+        if (nextIndex + 1 < 100)
+            nearGuess = guessGrid[nextIndex + 1] != 'o';
+
+        if (!nearGuess && nextIndex - 1 > 0)
+            nearGuess = guessGrid[nextIndex - 1] != 'o';
+        
+        if (!nearGuess && nextIndex + 10 < 100)
+            nearGuess = guessGrid[nextIndex + 10] != 'o'; 
+        
+        if (!nearGuess && nextIndex - 10 > 0)
+            nearGuess = guessGrid[nextIndex - 10] != 'o';
+
+        if (edgeCase || nearGuess)
+            newGuess = Random.Range(0, 100);
+
+        while (guessGrid[newGuess] != 'o')
+            newGuess = Random.Range(0, 100);
+
+        return newGuess;
+    }
+
     public void MissileHit(int hit)
     {
         guessGrid[guess] = 'h';
+        Invoke("EndTurn", 1.0f);
     }
 
     public void SunkPlayer()
@@ -138,5 +168,55 @@ public class EnemyScript : MonoBehaviour
             if (guessGrid[i] == 'h') 
                 guessGrid[i] = 'x';
         }
+    }
+    private void EndTurn()
+    {
+        gameManager.GetComponent<GameManager>().EndEnemyTurn();
+    }
+
+    public void PauseAndEnd(int miss)
+    {
+        if(currentHit.Count > 0 && currentHit[0] > miss)
+        {
+            foreach(int potential in potentialHits)
+            {
+                if(currentHit[0] > miss)
+                {
+                    if (potential < miss)
+                        potentialHits.Remove(potential);
+                }
+                else
+                {
+                    if (potential > miss)
+                        potentialHits.Remove(potential);
+                }
+            }
+        }
+        Invoke("EndTurn", 1.0f);
+    }
+
+    private int GuessQuality(int currentGuess)
+    {
+        int nextIndex = currentGuess;
+
+        bool edgeCase = nextIndex < 10 || nextIndex > 90 || nextIndex % 10 == 1 || nextIndex % 10 == 0;
+        bool nearGuess = false;
+
+        if (nextIndex + 1 < 100)
+            nearGuess = guessGrid[nextIndex + 1] != 'o';
+
+        if (!nearGuess && nextIndex - 1 > 0)
+            nearGuess = guessGrid[nextIndex - 1] != 'o';
+
+        if (!nearGuess && nextIndex + 10 < 99)
+            nearGuess = guessGrid[nextIndex + 10] != 'o';
+
+        if (!nearGuess && nextIndex - 10 > 0)
+            nearGuess = guessGrid[nextIndex - 0] != 'o';
+
+        if (edgeCase || nearGuess)
+            nextIndex = Random.Range(0, 100);
+
+        return nextIndex;
     }
 }

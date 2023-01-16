@@ -19,11 +19,13 @@ public class EnemyMissileScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ship"))
         {
+            if (collision.gameObject.name == "Submarine")
+                targetTileLocaction.y += 0.3f;
             gameManager.EnemyHitPlayer(targetTileLocaction, targetTile, collision.gameObject);
         }
         else
         {
-
+            enemyScript.PauseAndEnd(targetTile);
         }
         Destroy(gameObject);
     }
